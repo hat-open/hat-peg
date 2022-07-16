@@ -40,8 +40,7 @@ def task_build():
             name='hat-peg',
             description='Hat PEG parser',
             url='https://github.com/hat-open/hat-peg',
-            license=common.License.APACHE2,
-            packages=['hat'])
+            license=common.License.APACHE2)
 
     return {'actions': [build]}
 
