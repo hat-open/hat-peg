@@ -94,16 +94,16 @@ class Node(typing.NamedTuple):
 
     """
     name: str
-    value: typing.List[typing.Union['Node', str]]
+    value: list[typing.Union['Node', str]]
 
 
-Action = typing.Callable[[Node, typing.List], typing.Any]
+Action: typing.TypeAlias = typing.Callable[[Node, list], typing.Any]
 """Action"""
 
 
 def walk_ast(node: Node,
-             actions: typing.Dict[str, Action],
-             default_action: typing.Optional[Action] = None
+             actions: dict[str, Action],
+             default_action: Action | None = None
              ) -> typing.Any:
     """Simple depth-first abstract syntax tree parser.
 
@@ -118,9 +118,11 @@ def walk_ast(node: Node,
     action = actions.get(node.name, default_action)
     if not action:
         return
+
     children = [walk_ast(i, actions, default_action)
                 if isinstance(i, Node) else i
                 for i in node.value]
+
     return action(node, children)
 
 
@@ -168,8 +170,9 @@ class Dot(typing.NamedTuple):
     pass
 
 
-Expression = typing.Union[Sequence, Choice, Not, And, OneOrMore, ZeroOrMore,
-                          Optional, Identifier, Literal, Class, Dot]
+Expression: typing.TypeAlias = (Sequence | Choice | Not | And | OneOrMore |
+                                ZeroOrMore | Optional | Identifier | Literal |
+                                Class | Dot)
 """Expression"""
 
 
@@ -181,7 +184,7 @@ class MatchResult(typing.NamedTuple):
         rest: remaining input data
 
     """
-    node: typing.Optional[Node]
+    node: Node | None
     rest: str
 
 
@@ -197,11 +200,12 @@ class MatchCallFrame(typing.NamedTuple):
     data: str
 
 
-MatchCallStack = typing.Iterable[MatchCallFrame]
+MatchCallStack: typing.TypeAlias = typing.Iterable[MatchCallFrame]
 """Match call stack"""
 
 
-DebugCb = typing.Callable[[MatchResult, MatchCallStack], None]
+DebugCb: typing.TypeAlias = typing.Callable[[MatchResult, MatchCallStack],
+                                            None]
 """Debug callback"""
 
 
@@ -215,8 +219,7 @@ class Grammar:
     """
 
     def __init__(self,
-                 definitions: typing.Union[str,
-                                           typing.Dict[str, Expression]],
+                 definitions: str | dict[str, Expression],
                  starting: str):
         if isinstance(definitions, str):
             ast = _peg_grammar.parse(definitions)
@@ -227,7 +230,7 @@ class Grammar:
         self._starting = starting
 
     @property
-    def definitions(self) -> typing.Dict[str, Expression]:
+    def definitions(self) -> dict[str, Expression]:
         """Definitions"""
         return self._definitions
 
@@ -238,7 +241,7 @@ class Grammar:
 
     def parse(self,
               data: str,
-              debug_cb: typing.Optional[DebugCb] = None
+              debug_cb: DebugCb | None = None
               ) -> Node:
         """Parse input data.
 
@@ -270,7 +273,7 @@ def console_debug_cb(result: MatchResult, call_stack: MatchCallStack):
 
 
 class _MatchCallStack(typing.NamedTuple):
-    frame: typing.Optional[MatchCallFrame]
+    frame: MatchCallFrame | None
     previous: typing.Optional['_MatchCallStack']
 
     def __iter__(self):
@@ -626,12 +629,4 @@ _peg_actions = {
     'QUESTION': lambda n, c: Optional,
     'STAR': lambda n, c: ZeroOrMore,
     'PLUS': lambda n, c: OneOrMore,
-    'DOT': lambda n, c: Dot()
-}
-
-
-# HACK type alias
-util.register_type_alias('Action')
-util.register_type_alias('Expression')
-util.register_type_alias('MatchCallStack')
-util.register_type_alias('DebugCb')
+    'DOT': lambda n, c: Dot()}
