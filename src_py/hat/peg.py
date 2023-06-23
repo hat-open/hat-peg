@@ -163,7 +163,7 @@ class Literal(typing.NamedTuple):
 
 
 class Class(typing.NamedTuple):
-    values: typing.List[typing.Union[str, typing.Tuple[str, str]]]
+    values: list[str | tuple[str, str]]
 
 
 class Dot(typing.NamedTuple):
