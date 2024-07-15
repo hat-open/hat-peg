@@ -1,2 +1,2 @@
-hat-doit ~=0.15.13
-hat-util ~=0.6.10
+hat-doit ~=0.15.16
+hat-util ~=0.6.16
