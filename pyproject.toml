@@ -1,6 +1,6 @@
 [project]
 name = "hat-peg"
-version = "0.5.9"
+version = "0.5.10"
 description = "Hat PEG parser"
 readme = "README.rst"
 requires-python = ">=3.10"
@@ -17,10 +17,10 @@ Repository = "https://github.com/hat-open/hat-peg.git"
 Documentation = "http://hat-peg.hat-open.com"
 
 [project.optional-dependencies]
-dev = ["hat-doit ~=0.15.16"]
+dev = ["hat-doit ~=0.15.18"]
 
 [build-system]
-requires = ["hat-doit ~=0.15.16"]
+requires = ["hat-doit ~=0.15.18"]
 build-backend = "hat.doit.pep517"
 
 [tool.pytest.ini_options]
